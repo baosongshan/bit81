@@ -8,5 +8,11 @@
 #include<stdbool.h>
 
 #define DataType int
+void Swap(DataType *a, DataType *b)
+{
+	DataType tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
 #endif
