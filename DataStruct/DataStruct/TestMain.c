@@ -1,5 +1,6 @@
 //#include"seqlist.h"
-#include"slist.h"
+//#include"slist.h"
+#include"sclist.h"
 #include<vld.h>
 
 int main()
@@ -7,10 +8,14 @@ int main()
 	//SeqList mylist;
 	//SeqListInit(&mylist, SEQLIST_DEFAULT_SIZE);
 
-	SList mylist;
-	SListInit(&mylist);
+	//SList mylist;
+	//SListInit(&mylist);
 
-	SListNode *p;
+	SCList mylist;
+	SCListInit(&mylist);
+
+
+	SCListNode *p;
 
 	int pos;
 	int select = 1;
@@ -41,24 +46,24 @@ int main()
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				SListPushBack(&mylist, item);
+				SCListPushBack(&mylist, item);
 			}
 			break;
 		case 2:
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				SListPushFront(&mylist, item);
+				//SListPushFront(&mylist, item);
 			}
 			break;
 		case 3:
-			SListShow(&mylist);
+			SCListShow(&mylist);
 			break;
 		case 4:
-			SListPopBack(&mylist);
+			//SListPopBack(&mylist);
 			break;
 		case 5:
-			SListPopFront(&mylist);
+			//SListPopFront(&mylist);
 			break;
 		case 6:
 			printf("请输入要插入的位置:>");
@@ -70,7 +75,7 @@ int main()
 		case 7:
 			printf("请输入要插入的数据:>");
 			scanf("%d", &item);
-			//SeqListInsertByVal(&mylist,item);
+			//SListInsertByVal(&mylist,item);
 			break;
 		case 8:
 			printf("请输入要删除的位置:>");
@@ -80,7 +85,7 @@ int main()
 		case 9:
 			printf("请输入要删除的数据:>");
 			scanf("%d", &key);
-			SListDeleteByVal(&mylist, key);
+			//SListDeleteByVal(&mylist, key);
 			break;
 		case 10:
 			printf("请输入要查找的位置:>");
@@ -94,23 +99,23 @@ int main()
 		case 11:
 			printf("请输入要查找的值:>");
 			scanf("%d", &key);
-			p = SListFindByVal(&mylist, key);
+			//p = SListFindByVal(&mylist, key);
 			if(pos == -1)
 				printf("查找的数据不存在.\n");
 			else
 				printf("数据所在的下标为:> %d\n", pos);
 			break;
 		case 12:
-			//SeqListSort(&mylist);
+			//SListSort(&mylist);
 			break;
 		case 13:
-			//SeqListReverse(&mylist);
+			//SListReverse(&mylist);
 			break;
 		case 14:
-			//printf("SeqList Length = %d\n", SeqListLength(&mylist));
+			//printf("SeqList Length = %d\n", SListLength(&mylist));
 			break;
 		case 15:
-			//SeqListClear(&mylist);
+			//SListClear(&mylist);
 			break;
 		case 18:
 			//printf("capacity = %d\n", SeqListCapacity(&mylist));
@@ -123,6 +128,6 @@ int main()
 		system("cls"); 
 	}
 
-	//SeqListDestroy(&mylist);
+	//SListDestroy(&mylist);
 	return 0;
 }

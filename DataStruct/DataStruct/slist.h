@@ -36,6 +36,14 @@ bool SListPopFront(SList *plist);
 SListNode* SListFindByVal(SList *plist, DataType key);
 bool SListDeleteByVal(SList *plist, DataType key);
 
+size_t SListLength(SList *plist);
+void SListClear(SList *plist);
+void SListDestroy(SList *plist);
+void SListReverse(SList *plist);
+
+void SListInsertByVal(SList *plist, DataType x);
+void SListSort(SList *plist);
+
 /////////////////////////////////////////////////////////
 void SListInit(SList *plist)
 {
@@ -134,8 +142,126 @@ bool SListDeleteByVal(SList *plist, DataType key)
 	return true;
 }
 
+size_t SListLength(SList *plist)
+{
+	return plist->size;
+}
+
+void SListClear(SList *plist)
+{
+	SListNode *p = plist->first->next;
+	while(p != NULL)
+	{
+		plist->first->next = p->next;
+		free(p);
+		p = plist->first->next;
+	}
+	plist->last = plist->first;
+	plist->size = 0;
+}
+
+void SListDestroy(SList *plist)
+{
+	SListClear(plist);
+	free(plist->first);
+	plist->first = plist->last = NULL;
+}
+
+void SListReverse(SList *plist)
+{
+	if(plist->size > 1)
+	{
+		SListNode *p1, *p2, *p3;
+		p1 = NULL;
+		p2 = plist->first->next;
+		p3 = p2->next;
+
+		plist->last = p2;
+		while(p2 != NULL)
+		{
+			p2->next = p1;
+			p1 = p2;
+			p2 = p3;
+			if(p3 != NULL)
+				p3 = p3->next;//
+		}
+		plist->first->next = p1;
+	}
+}
+
+void SListInsertByVal(SList *plist, DataType x)
+{
+	SListNode *p = plist->first;
+	while(p->next!=NULL && x>p->next->data)
+		p = p->next;
+
+	SListNode *s = _Buynode(x);
+	if(p->next == NULL)
+	{
+		p->next = s;
+		plist->last = s;
+	}
+	else
+	{
+		s->next = p->next;
+		p->next = s;
+	}
+	plist->size++;
+}
+
+void SListSort(SList *plist)
+{
+	if(plist->size > 1)
+	{
+		SListNode *prev;
+		SListNode *p = plist->first->next;
+		SListNode *q = p->next;
+		plist->last = p;
+		plist->last->next = NULL;
+
+		p = q;
+		while(p != NULL)
+		{
+			q = q->next;
+			prev = plist->first;
+			while(prev->next!=NULL && p->data>prev->next->data)
+				prev = prev->next;
+
+			if(prev->next == NULL)
+			{
+				prev->next = p;
+				plist->last = p;
+				p->next = NULL;
+			}
+			else
+			{
+				p->next = prev->next;
+				prev->next = p;
+			}
+			p = q;
+		}
+	}
+}
+
 
 #if 0
+void SListReverse(SList *plist)
+{
+	SListNode *p = plist->first->next;
+	SListNode *q = p->next;	
+	plist->last = p;
+	plist->last->next = NULL;
+	p = q;
+	while(p != NULL)
+	{
+		q = p->next;
+		p->next = plist->first->next;
+		plist->first->next = p;
+		p = q;
+	}
+}
+
+
 SListNode* SListFindByVal(SList *plist, DataType key)
 {
 	SListNode *p = plist->first->next;
