@@ -1,6 +1,7 @@
 //#include"seqlist.h"
 //#include"slist.h"
-#include"sclist.h"
+//#include"sclist.h"
+#include"dlist.h"
 #include<vld.h>
 
 int main()
@@ -11,11 +12,15 @@ int main()
 	//SList mylist;
 	//SListInit(&mylist);
 
-	SCList mylist;
-	SCListInit(&mylist);
+	//SCList mylist;
+	//SCListInit(&mylist);
+
+	DList mylist;
+	DListInit(&mylist);
 
 
-	SCListNode *p;
+
+	DListNode *p;
 
 	int pos;
 	int select = 1;
@@ -46,18 +51,18 @@ int main()
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				SCListPushBack(&mylist, item);
+				DListPushBack(&mylist, item);
 			}
 			break;
 		case 2:
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				//SListPushFront(&mylist, item);
+				DListPushFront(&mylist, item);
 			}
 			break;
 		case 3:
-			SCListShow(&mylist);
+			DListShow(&mylist);
 			break;
 		case 4:
 			//SListPopBack(&mylist);
@@ -85,7 +90,7 @@ int main()
 		case 9:
 			printf("请输入要删除的数据:>");
 			scanf("%d", &key);
-			//SListDeleteByVal(&mylist, key);
+			DListDeleteByVal(&mylist, key);
 			break;
 		case 10:
 			printf("请输入要查找的位置:>");
@@ -99,7 +104,7 @@ int main()
 		case 11:
 			printf("请输入要查找的值:>");
 			scanf("%d", &key);
-			//p = SListFindByVal(&mylist, key);
+			p = DListFindByVal(&mylist, key);
 			if(pos == -1)
 				printf("查找的数据不存在.\n");
 			else
