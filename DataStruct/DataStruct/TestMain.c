@@ -1,9 +1,67 @@
-//#include"seqlist.h"
+#include"seqlist.h"
 //#include"slist.h"
 //#include"sclist.h"
-#include"dlist.h"
-#include<vld.h>
+//#include"dlist.h"
+//#include"dclist.h"
+//#include<vld.h>
 
+typedef struct Node
+{
+	int data;
+	struct Node *next;
+}Node;
+
+typedef Node* List;
+
+
+void InitList(List *head)
+{
+	*head = (Node*)malloc(sizeof(Node));
+	(*head)->next = NULL;
+}
+
+void CreateList(List *head)
+{
+	Node *p = *head;
+	for(int i=1; i<=5; ++i)
+	{
+		Node *s = (Node*)malloc(sizeof(Node));
+		assert(s != NULL);
+		s->data = i;
+		s->next = NULL;
+
+		p->next = s;
+		p = s;
+	}
+}
+
+struct Node* middleNode(struct Node* head)
+{
+    int nodeCount = 0;
+    struct Node *p = head->next;
+    while(p != NULL)
+    {
+        nodeCount++;
+        p = p->next;
+    }
+
+    p = head->next;
+    for(int i=0; i<nodeCount/2; ++i)
+        p = p->next;
+    return p;
+}
+
+int main()
+{
+	List mylist;
+	InitList(&mylist);
+	CreateList(&mylist);
+
+	struct Node *p = middleNode(mylist);
+	return 0;
+}
+
+/*
 int main()
 {
 	//SeqList mylist;
@@ -15,12 +73,15 @@ int main()
 	//SCList mylist;
 	//SCListInit(&mylist);
 
-	DList mylist;
-	DListInit(&mylist);
+	//DList mylist;
+	//DListInit(&mylist);
+
+	DCList mylist;
+	DCListInit(&mylist);
 
 
 
-	DListNode *p;
+	DCListNode *p;
 
 	int pos;
 	int select = 1;
@@ -51,24 +112,24 @@ int main()
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				DListPushBack(&mylist, item);
+				DCListPushBack(&mylist, item);
 			}
 			break;
 		case 2:
 			printf("请输入要插入的数据<-1结束>:>");
 			while(scanf("%d", &item), item!=-1)
 			{
-				DListPushFront(&mylist, item);
+				DCListPushFront(&mylist, item);
 			}
 			break;
 		case 3:
-			DListShow(&mylist);
+			DCListShow(&mylist);
 			break;
 		case 4:
-			//SListPopBack(&mylist);
+			DCListPopBack(&mylist);
 			break;
 		case 5:
-			//SListPopFront(&mylist);
+			DCListPopFront(&mylist);
 			break;
 		case 6:
 			printf("请输入要插入的位置:>");
@@ -80,7 +141,7 @@ int main()
 		case 7:
 			printf("请输入要插入的数据:>");
 			scanf("%d", &item);
-			//SListInsertByVal(&mylist,item);
+			DCListInsertByVal(&mylist,item);
 			break;
 		case 8:
 			printf("请输入要删除的位置:>");
@@ -90,7 +151,7 @@ int main()
 		case 9:
 			printf("请输入要删除的数据:>");
 			scanf("%d", &key);
-			DListDeleteByVal(&mylist, key);
+			DCListDeleteByVal(&mylist, key);
 			break;
 		case 10:
 			printf("请输入要查找的位置:>");
@@ -104,23 +165,23 @@ int main()
 		case 11:
 			printf("请输入要查找的值:>");
 			scanf("%d", &key);
-			p = DListFindByVal(&mylist, key);
+			p = DCListFindByVal(&mylist, key);
 			if(pos == -1)
 				printf("查找的数据不存在.\n");
 			else
 				printf("数据所在的下标为:> %d\n", pos);
 			break;
 		case 12:
-			//SListSort(&mylist);
+			DCListSort(&mylist);
 			break;
 		case 13:
-			//SListReverse(&mylist);
+			DCListReverse(&mylist);
 			break;
 		case 14:
 			//printf("SeqList Length = %d\n", SListLength(&mylist));
 			break;
 		case 15:
-			//SListClear(&mylist);
+			DCListClear(&mylist);
 			break;
 		case 18:
 			//printf("capacity = %d\n", SeqListCapacity(&mylist));
@@ -133,6 +194,7 @@ int main()
 		system("cls"); 
 	}
 
-	//SListDestroy(&mylist);
+	DCListDestroy(&mylist);
 	return 0;
 }
+*/

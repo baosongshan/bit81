@@ -98,23 +98,24 @@ bool DListDeleteByVal(DList *plist, DataType key)
 	if(p == NULL)
 		return false;
 
-	//É¾³ý//£¿£¿£¿£¿£¿£¿£¿£¿
-
+	//É¾³ý
+	if(p == plist->last)
+		plist->last = p->prev;
+	p->prev->next = p->next;
+	if(p->next != NULL)
+		p->next->prev = p->prev;
+	free(p);
+	plist->size--;
 	return true;
 }
 
 /*
-
 bool SListPopBack(SList *plist);
 bool SListPopFront(SList *plist);
-
-
-
 size_t SListLength(SList *plist);
 void SListClear(SList *plist);
 void SListDestroy(SList *plist);
 void SListReverse(SList *plist);
-
 void SListInsertByVal(SList *plist, DataType x);
 void SListSort(SList *plist);
 */
