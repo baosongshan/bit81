@@ -43,7 +43,7 @@ void DCListSort(DCList *plist);
 
 void DCListInit(DCList *plist)
 {
-	DCListNode *s = _Buynode(0);
+	DCListNode *s = _Buynode(0); //
 	plist->first = plist->last = s;
 	plist->last->next = plist->first;
 	plist->first->prev = plist->last;
@@ -133,7 +133,7 @@ bool DCListInsertByVal(DCList *plist, DataType x)
 	DCListNode *s = _Buynode(x);
 	if(s == NULL)
 		return false;
-	p = plist->first->next;
+	p = plist->first->next; //
 	while(p!=plist->first && s->data>p->data)
 		p = p->next;
 

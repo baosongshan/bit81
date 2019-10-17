@@ -4,7 +4,51 @@
 //#include"dlist.h"
 //#include"dclist.h"
 //#include<vld.h>
+#include"stack.h"
 
+int main()
+{
+	ListStack st; 
+	ListStackInit(&st);
+	ListStackPush(&st, 1);
+	ListStackPush(&st, 2);
+	ListStackPush(&st, 3);
+	ListStackShow(st);
+	printf("==============\n");
+	ListStackPop(&st);
+	ListStackShow(st);
+
+
+
+	return 0;
+}
+
+/*
+int main()
+{
+	SeqStack st;
+	SeqStackInit(&st, STACK_DEFAULT_SIZE);
+	//SeqStack *pst = SeqStackCreate(STACK_DEFAULT_SIZE);
+	SeqStackPush(&st, 1);
+	SeqStackPush(&st, 2);
+	SeqStackPush(&st, 3);
+	SeqStackPush(&st, 4);
+	SeqStackPush(&st, 5);
+	SeqStackPush(&st, 6);
+	SeqStackPush(&st, 7);
+	SeqStackPush(&st, 8);
+
+	int val = SeqStackTop(&st);
+	SeqStackPop(&st);
+
+	SeqStackPush(&st, 9);
+
+	SeqStackShow(&st);
+
+	return  0;
+}
+
+/*
 typedef struct Node
 {
 	int data;
@@ -51,7 +95,7 @@ struct Node* middleNode(struct Node* head)
     return p;
 }
 
-int main()
+int main()  //主函数  主线程
 {
 	List mylist;
 	InitList(&mylist);
