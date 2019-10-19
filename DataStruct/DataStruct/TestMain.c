@@ -4,8 +4,82 @@
 //#include"dlist.h"
 //#include"dclist.h"
 //#include<vld.h>
-#include"stack.h"
+//#include"stack.h"
+#include"queue.h"
 
+int main()
+{
+	LinkQueue LQ;
+	LinkQueueInit(&LQ);
+	LinkQueueEn(&LQ, 1);
+	LinkQueueEn(&LQ, 2);
+	LinkQueueEn(&LQ, 3);
+	LinkQueueEn(&LQ, 4);
+	LinkQueueEn(&LQ, 5);
+
+	LinkQueueShow(&LQ);
+
+	LinkQueueDestroy(&LQ);
+	return 0;
+}
+
+/*
+int main()
+{
+	SeqCyQueue CQ;
+	SeqQueueCyInit(&CQ, 8);
+	SeqQueueCyEn(&CQ, 1);
+	SeqQueueCyEn(&CQ, 2);
+	SeqQueueCyEn(&CQ, 3);
+	SeqQueueCyEn(&CQ, 4);
+	SeqQueueCyEn(&CQ, 5);
+
+	SeqQueueCyShow(&CQ);
+	SeqQueueCyDe(&CQ);
+	SeqQueueCyDe(&CQ);
+	SeqQueueCyShow(&CQ);
+
+	SeqQueueCyEn(&CQ, 6);
+	SeqQueueCyEn(&CQ, 7);
+	SeqQueueCyEn(&CQ, 8);
+	SeqQueueCyEn(&CQ, 9);
+
+	SeqQueueCyShow(&CQ);
+
+	SeqQueueCyEn(&CQ, 19);
+
+	return 0;
+}
+
+/*
+int main()
+{
+	SeqQueue Q;//
+	SeqQueueInit(&Q, DEFAULT_QUEUE_SIZE);
+	SeqQueueEn(&Q, 1); //
+	SeqQueueEn(&Q, 2);
+	SeqQueueEn(&Q, 3);
+	SeqQueueEn(&Q, 4);
+	SeqQueueEn(&Q, 5);
+	SeqQueueShow(&Q);
+
+	SeqQueueDe(&Q);
+	SeqQueueDe(&Q);
+
+	SeqQueueShow(&Q);
+
+	SeqQueueEn(&Q, 6);
+	SeqQueueEn(&Q, 7);
+	SeqQueueEn(&Q, 8);
+	SeqQueueEn(&Q, 9);
+
+	SeqQueueDestroy(&Q);
+
+	return 0;
+}
+
+
+/*
 int main()
 {
 	ListStack st; 

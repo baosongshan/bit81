@@ -88,6 +88,12 @@ void SeqStackShow(SeqStack *pst)
 		printf("%d\n", pst->base[i]);
 }
 
+void SeqStackDestroy(SeqStack *pst)
+{
+	free(pst);
+	free(pst->base);
+}
+
 //Á´Õ»
 typedef struct StackNode
 {
