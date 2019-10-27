@@ -4,6 +4,8 @@
 
 #define DEFAULT_QUEUE_SIZE 8
 
+
+
 //顺序队列
 typedef struct SeqQueue
 {
@@ -146,11 +148,15 @@ void SeqQueueCyDestroy(SeqCyQueue *Q)
 	Q->base = NULL;
 	Q->capacity = Q->front = Q->tail = 0;
 }
+/////////////////////////////////////////////////////////////////
+
+#include"bintree.h"
+#define QueueDataType BinTreeNode*
 
 //链式队列
 typedef struct LinkQueueNode
 {
-	DataType data;
+	QueueDataType data;
 	struct LinkQueueNode *next;
 }LinkQueueNode;
 
@@ -163,9 +169,9 @@ typedef struct LinkQueue
 bool LinkQueueEmpty(LinkQueue *Q)
 {return Q->front == NULL;}
 void LinkQueueInit(LinkQueue *Q);
-void LinkQueueEn(LinkQueue *Q, DataType x);
+void LinkQueueEn(LinkQueue *Q, QueueDataType x);
 void LinkQueueShow(LinkQueue *Q);
-DataType LinkQueueFront(LinkQueue *Q);
+QueueDataType LinkQueueFront(LinkQueue *Q);
 void LinkQueueDe(LinkQueue *Q);
 void LinkQueueDestroy(LinkQueue *Q);
 
@@ -173,8 +179,7 @@ void LinkQueueInit(LinkQueue *Q)
 {
 	Q->front = Q->tail = NULL;
 }
-
-void LinkQueueEn(LinkQueue *Q, DataType x)
+void LinkQueueEn(LinkQueue *Q, QueueDataType x)
 {
 	LinkQueueNode *s = (LinkQueueNode*)malloc(sizeof(LinkQueueNode));
 	assert(s != NULL);
@@ -203,7 +208,7 @@ void LinkQueueShow(LinkQueue *Q)
 	printf("\n");
 }
 
-DataType LinkQueueFront(LinkQueue *Q)
+QueueDataType LinkQueueFront(LinkQueue *Q)
 {
 	if(LinkQueueEmpty(Q))
 	{
