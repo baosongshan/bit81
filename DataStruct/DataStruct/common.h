@@ -9,7 +9,7 @@
 
 typedef enum {FALSE, TRUE}BOOL;
 
-#define DataType int
+#define DataType char
 void Swap(DataType *a, DataType *b)
 {
 	DataType tmp = *a;

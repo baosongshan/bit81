@@ -79,6 +79,7 @@
     <ClCompile Include="TestMain.c" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bintree.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="dclist.h" />
     <ClInclude Include="dlist.h" />

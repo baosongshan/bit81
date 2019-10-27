@@ -5,8 +5,31 @@
 //#include"dclist.h"
 //#include<vld.h>
 //#include"stack.h"
-#include"queue.h"
+//#include"queue.h"
 
+#include"bintree.h"
+
+int main()
+{
+	char *str = "ABC##DE##f##G#H##";
+	BinTree bt;
+	BinTreeInit(&bt);
+	//BinTreeCreate(&bt);
+	BinTreeCreate(&bt, str);
+
+	printf("VLR:");
+	PreOrder(&bt);
+	printf("\n");
+	printf("LVR:");
+	InOrder(&bt);
+	printf("\n");
+	printf("LRV:");
+	PostOrder(&bt);
+	printf("\n");
+	return 0;
+}
+
+/*
 int main()
 {
 	LinkQueue LQ;
