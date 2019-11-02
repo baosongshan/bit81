@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bintree.h" />
+    <ClInclude Include="bst.h" />
     <ClInclude Include="common.h" />
     <ClInclude Include="dclist.h" />
     <ClInclude Include="dlist.h" />

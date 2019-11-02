@@ -8,8 +8,51 @@
 //#include"queue.h"
 
 //#include"bintree.h"
-#include"heap.h"
+//#include"heap.h"
+#include"bst.h"
 
+int main()
+{
+	BSTree bst;
+	int i;
+	int j = 0;
+	int ar[] = {45, 10, 24, 53, 12, 38, 21, 90, 30};
+	int n = sizeof(ar) / sizeof(int);
+	BSTreeInit(&bst);
+
+	for(i=0; i<n; ++i)
+	{
+		Insert(&bst, ar[i]);
+	}
+
+	printf("Min = %d\n", Min(bst));
+	printf("Max = %d\n", Max(bst));
+
+	Remove(&bst, 45);
+
+	return 0;
+}
+
+/*
+int main()
+{
+	BSTree bst;
+	int i;
+	int j = 0;
+	int ar[] = {45, 10, 24, 53, 12, 38, 21, 90, 30};
+	int n = sizeof(ar) / sizeof(int);
+	BSTreeInit(&bst);
+
+	for(i=0; i<n; ++i)
+	{
+		Insert(&bst, ar[i]);
+	}
+
+	Sort(bst, ar, &j);
+	return 0;
+}
+
+/*
 void main()
 {
 	int ar[] = {27, 15,19, 18, 28, 34, 65, 49, 25, 37};
@@ -25,8 +68,11 @@ void main()
 
 	HeapShow(&hp);
 
+	HeapRemove(&hp);
+	HeapShow(&hp);
 
 	HeapRemove(&hp);
+	HeapShow(&hp);
 
 	HeapDestroy(&hp);
 }

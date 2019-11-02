@@ -24,7 +24,7 @@ void HeapDestroy(Heap *php);
 bool HeapInsert(Heap *php, DataType x);
 void HeapShow(Heap *php);
 DataType HeapTop(Heap *php);
-void HeapRemove(Heap *php);
+bool HeapRemove(Heap *php);
 
 void _AdjustUp(Heap *php, int start);
 void _AdjustDown(Heap *php, int start);
@@ -69,7 +69,6 @@ void _AdjustUp(Heap *php, int start)
 			break;
 	}
 }
-
 void HeapShow(Heap *php)
 {
 	int i;
@@ -77,19 +76,40 @@ void HeapShow(Heap *php)
 	{
 		printf("%d ", php->heap[i]);
 	}
+	printf("\n");
 }
-
 DataType HeapTop(Heap *php)
 {
-
+	if(!HeapEmpty(php))
+	{
+		return php->heap[0];
+	}
 }
-void HeapRemove(Heap *php)
+bool HeapRemove(Heap *php)
 {
-
+	if(HeapEmpty(php))
+		return false;
+	php->heap[0] = php->heap[php->size-1];
+	php->size--;
+	_AdjustDown(php, 0);
 }
 void _AdjustDown(Heap *php, int start)
 {
-
+	int i = start;
+	int j = 2*i+1;
+	while(j < php->size)
+	{
+		if(j+1<php->size && php->heap[j]>php->heap[j+1])
+			j++;
+		if(php->heap[j] < php->heap[i])
+		{
+			Swap(&(php->heap[j]), &(php->heap[i]));
+			i = j;
+			j = 2*i+1;
+		}
+		else
+			break;
+	}
 }
 
 #endif /* _HEAP_H_ */

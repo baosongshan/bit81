@@ -732,3 +732,186 @@ void myCircularQueueFree(MyCircularQueue* obj)
  
  * myCircularQueueFree(obj);
 */
+
+二叉树
+1、https://leetcode-cn.com/problems/binary-tree-preorder-traversal/ [二叉树的前序遍历]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+int size(struct TreeNode *root)
+{
+    if(root == NULL)
+        return 0;
+    else
+        return size(root->left)+size(root->right)+1;
+}
+
+void _preorderTraversal(struct TreeNode* root, int *preorder, int *i)
+{
+    if(root != NULL)
+    {
+        preorder[*i] = root->val;
+        (*i)++;
+        _preorderTraversal(root->left, preorder, i);
+        _preorderTraversal(root->right, preorder, i);
+    }
+}
+
+int* preorderTraversal(struct TreeNode* root, int* returnSize)
+{
+    int n = size(root);
+    int *preorder = (int*)malloc(sizeof(int)*n);
+    *returnSize = n;
+
+    int i = 0;
+    _preorderTraversal(root, preorder, &i);
+
+    return preorder;
+}
+
+2、https://leetcode-cn.com/problems/binary-tree-inorder-traversal/submissions/ [二叉树的中序遍历]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+int size(struct TreeNode *root)
+{
+    if(root == NULL)
+        return 0;
+    else
+        return size(root->left)+size(root->right)+1;
+}
+void _inorderTraversal(struct TreeNode* root, int *inorder, int *i)
+{
+    if(root != NULL)
+    {
+        _inorderTraversal(root->left, inorder, i);
+        inorder[*i] = root->val;
+        (*i)++;
+        _inorderTraversal(root->right, inorder, i);
+    }
+}
+int* inorderTraversal(struct TreeNode* root, int* returnSize)
+{
+    int n = size(root);
+    *returnSize = n;
+    int *inorder = (int*)malloc(sizeof(int) * n);
+
+    int index = 0;
+    _inorderTraversal(root, inorder, &index);
+
+    return inorder;
+}
+
+3、https://leetcode-cn.com/problems/binary-tree-postorder-traversal/submissions/ [二叉树的后序遍历]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+/**
+ * Note: The returned array must be malloced, assume caller calls free().
+ */
+
+
+int size(struct TreeNode *root)
+{
+    if(root == NULL)
+        return 0;
+    else
+        return size(root->left)+size(root->right)+1;
+}
+void _postorderTraversal(struct TreeNode* root, int *postorder, int *i)
+{
+    if(root != NULL)
+    {
+        _postorderTraversal(root->left, postorder, i);
+        _postorderTraversal(root->right, postorder, i);
+        postorder[*i] = root->val;
+        (*i)++;
+    }
+}
+
+int* postorderTraversal(struct TreeNode* root, int* returnSize)
+{
+    int n = size(root);
+    *returnSize = n;
+    int *postorder = (int*)malloc(sizeof(int) * n);
+
+    int index = 0;
+    _postorderTraversal(root, postorder, &index);
+
+    return postorder;
+}
+
+4、https://leetcode-cn.com/problems/same-tree/submissions/ [检查两颗树是否相同]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+bool isSameTree(struct TreeNode* p, struct TreeNode* q)
+{
+    if(p==NULL && q==NULL)
+        return true;
+    if(p==NULL || q==NULL)
+        return false;
+    return p->val==q->val && isSameTree(p->left, q->left) 
+    && isSameTree(p->right, q->right);
+}
+
+6、https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/submissions/ [二叉树最大深度]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+
+int maxDepth(struct TreeNode* root)
+{
+    if(root == NULL)
+        return 0;
+    else
+    {
+        int left_h = maxDepth(root->left);
+        int right_h = maxDepth(root->right);
+        return (left_h>right_h ? left_h : right_h)+1;
+    }
+}
+
+
