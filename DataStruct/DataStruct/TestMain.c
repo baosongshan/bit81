@@ -9,8 +9,22 @@
 
 //#include"bintree.h"
 //#include"heap.h"
-#include"bst.h"
+//#include"bst.h"
+#include"sort.h"
 
+
+void main()
+{
+	//int ar[] = {49, 38, 65,97, 76, 13,27, 49};
+	int ar[] = { 9, 1, 2, 5, 7, 4, 8, 6, 3 ,5};
+	int n = sizeof(ar) / sizeof(int);
+	PrintArray(ar, 0, n-1);
+	TestSort(ar, 0, n-1);
+	TestSrotEfficiency();
+}
+
+
+/*
 int main()
 {
 	BSTree bst;

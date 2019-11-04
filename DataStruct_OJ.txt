@@ -891,6 +891,37 @@ bool isSameTree(struct TreeNode* p, struct TreeNode* q)
     && isSameTree(p->right, q->right);
 }
 
+5、https://leetcode-cn.com/problems/subtree-of-another-tree/ [另一颗树的子树]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+bool isSameTree(struct TreeNode* p, struct TreeNode* q)
+{
+    if(p==NULL && q==NULL)
+        return true;
+    if(p==NULL || q==NULL)
+        return false;
+    return p->val==q->val && isSameTree(p->left, q->left) 
+    && isSameTree(p->right, q->right);
+}
+
+bool isSubtree(struct TreeNode* s, struct TreeNode* t)
+{
+    if(t == NULL)
+        return true;    
+    if(s == NULL)
+        return false;
+    if(isSameTree(s, t))
+        return true;
+    return isSubtree(s->left, t) || isSubtree(s->right, t);
+}
+
 6、https://leetcode-cn.com/problems/maximum-depth-of-binary-tree/submissions/ [二叉树最大深度]
 /**
  * Definition for a binary tree node.
@@ -912,6 +943,115 @@ int maxDepth(struct TreeNode* root)
         int right_h = maxDepth(root->right);
         return (left_h>right_h ? left_h : right_h)+1;
     }
+}
+
+7、https://leetcode-cn.com/problems/balanced-binary-tree/submissions/ [判断一颗二叉树是否是平衡二叉树]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+int maxDepth(struct TreeNode* root)
+{
+    if(root == NULL)
+        return 0;
+    else
+    {
+        int left_h = maxDepth(root->left);
+        int right_h = maxDepth(root->right);
+        return (left_h>right_h ? left_h : right_h)+1;
+    }
+}
+
+bool isBalanced(struct TreeNode* root)
+{
+    if(root == NULL)
+        return true;
+    int left_h = maxDepth(root->left);
+    int right_h = maxDepth(root->right);
+
+    return (abs(left_h-right_h)<2)
+           && isBalanced(root->left)
+           && isBalanced(root->right);
+}
+
+8、https://leetcode-cn.com/problems/symmetric-tree/ [对称二叉树]
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     struct TreeNode *left;
+ *     struct TreeNode *right;
+ * };
+ */
+
+bool _isSymmetric(struct TreeNode *t1, struct TreeNode *t2)
+{
+    if(t1==NULL && t2==NULL)
+        return true;
+    if(t1==NULL ||t2==NULL)
+        return false;
+    return t1->val==t2->val
+           && _isSymmetric(t1->left, t2->right)
+           && _isSymmetric(t1->right, t2->left);
+}
+
+bool isSymmetric(struct TreeNode* root)
+{
+    if(root == NULL)
+        return true;
+    return _isSymmetric(root->left, root->right);
+}
+
+9、https://www.nowcoder.com/practice/4b91205483694f449f94c179883c1fef?tpId=60&&tqId=29483&rp=1&ru=/activity/oj&qru=/ta/tsing-kaoyan/question-ranking [二叉树的构建及遍历]
+#include<stdio.h>
+
+typedef struct BinTreeNode
+{
+    char val;
+    struct BinTreeNode *left;
+    struct BinTreeNode *right;
+}BinTreeNode;
+
+typedef BinTreeNode* BinTree;
+
+BinTree CreateBinTree(char *str, int *i)
+{
+    if(str[*i]=='#' || str[*i]=='\0')
+        return NULL;
+    BinTreeNode *t = (BinTreeNode*)malloc(sizeof(BinTreeNode));
+    t->val = str[*i];
+    (*i)++;
+    t->left = CreateBinTree(str, i);
+    (*i)++;
+    t->right = CreateBinTree(str, i);
+    return t;
+}
+
+void InOrder(BinTree t)
+{
+    if(t != NULL)
+    {
+        InOrder(t->left);
+        printf("%c ", t->val);
+        InOrder(t->right);
+    }
+}
+
+int main()
+{
+    BinTree bt = NULL;
+    char str[1000] = {0};
+    scanf("%s", str);
+    int i = 0;
+    bt = CreateBinTree(str, &i);
+    InOrder(bt);
+        
+    return 0;
 }
 
 
