@@ -27,6 +27,7 @@ SListNode* _Buynode(DataType x)
 	return s;
 }
 
+bool SListEmpty(SList *plist);
 void SListInit(SList *plist);
 void SListShow(SList *plist);
 bool SListPushBack(SList *plist, DataType x);
@@ -44,7 +45,14 @@ void SListReverse(SList *plist);
 void SListInsertByVal(SList *plist, DataType x);
 void SListSort(SList *plist);
 
+
 /////////////////////////////////////////////////////////
+
+bool SListEmpty(SList *plist)
+{
+	return plist->size == 0;
+}
+
 void SListInit(SList *plist)
 {
 	SListNode *s = _Buynode(0);

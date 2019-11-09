@@ -282,6 +282,192 @@ void BubbleSort_1(int *ar, int left, int right)
 	}
 }
 
+//快排
+int GetMidIndex(int *ar, int left, int right)
+{
+	int mid = (left+right) / 2;
+	if(ar[left]>ar[mid] && ar[left]<ar[right])
+		return left;
+	if(ar[mid]>ar[left] && ar[mid]<ar[right])
+		return mid;
+	return right;
+}
+
+int _Partition_1(int *ar, int left, int right)
+{
+	int key = ar[left];
+	while(left < right)
+	{
+		while(left<right && ar[right] >= key)
+			right--;
+		Swap(&ar[left], &ar[right]);
+		while(left<right && ar[left] < key)
+			left++;
+		Swap(&ar[left], &ar[right]);
+	}
+	return left;
+}
+int _Partition_2(int *ar, int left, int right)
+{
+	int key = ar[left];
+	while(left < right)
+	{
+		while(left<right && ar[right] >= key)
+			right--;
+		ar[left] = ar[right];
+		while(left<right && ar[left] < key)
+			left++;
+		ar[right] = ar[left];
+	}
+	ar[left] = key;
+	return left;
+}
+int _Partition_3(int *ar, int left, int right)
+{
+	int index = GetMidIndex(ar, left, right);
+	if(index != left)
+		Swap(&ar[index], &ar[left]);
+
+	int key = ar[left];
+	int pos = left;
+	for(int i=left+1; i<=right; ++i)
+	{
+		if(ar[i] < key)
+		{
+			pos++;
+			if(pos != i)
+			{
+				Swap(&ar[pos], &ar[i]);
+			}
+		}
+	}
+	Swap(&ar[left], &ar[pos]);
+	return pos;
+}
+
+#define M 5
+void QuickSort(int *ar, int left, int right)
+{
+	if(left >= right)
+		return;
+
+	if(right-left+1 <= M)
+	{
+		InsertSort_1(ar, left, right);
+	}
+	else
+	{
+		int pos = _Partition_3(ar, left, right);
+		QuickSort(ar, left, pos-1);
+		QuickSort(ar, pos+1, right);
+	}
+}
+
+////////////////////////////////////////////////////
+//归并排序
+void _MergeSort(int *ar, int left, int right, int *tmp)
+{
+	if(left >= right)
+		return;
+	int mid = (left+right)/2;
+	_MergeSort(ar, left, mid, tmp);
+	_MergeSort(ar, mid+1, right, tmp);
+
+	//归并
+	int begin1, end1, begin2, end2, i;
+	begin1 = left, end1 = mid;
+	begin2 = mid+1, end2 = right;
+	i = left;
+	while(begin1<=end1 && begin2<=end2)
+	{
+		if(ar[begin1] < ar[begin2])
+			tmp[i++] = ar[begin1++];
+		else
+			tmp[i++] = ar[begin2++];
+	}
+
+	while(begin1 <= end1)
+	{
+		tmp[i++] = ar[begin1++];
+	}
+	while(begin2 <= end2)
+	{
+		tmp[i++] = ar[begin2++];
+	}
+	//
+	memcpy(ar+left, tmp+left, sizeof(int)*(right-left+1));
+}
+void MergeSort(int *ar, int left, int right)
+{
+	int n = right - left + 1;
+	int *tmp = (int*)malloc(sizeof(int) * n);
+	_MergeSort(ar, left, right, tmp);
+	free(tmp);
+	tmp = NULL;
+}
+
+//基数排序
+#include"slist.h"
+#define K 3
+#define RADIX 10
+SList list[RADIX]; // 0 1 2 3 4 5 6 7 8 9
+
+//278
+int GetKey(int value, int k)
+{
+	int key;
+	while(k >= 0)
+	{
+		key = value % 10;
+		value /= 10;
+		k--;
+	}
+	return key;
+}
+
+void Distribute(int *ar, int left, int right, int k)
+{
+	for(int i=left; i<=right; ++i)
+	{
+		int key = GetKey(ar[i], k);
+		SListPushBack(&list[key], ar[i]);
+	}
+}
+
+void Collect(int *ar)
+{
+	int k = 0;
+	for(int i=0; i<RADIX; ++i)
+	{
+		if(!SListEmpty(&list[i]))
+		{
+			SListNode *p = list[i].first->next;
+			while(p != NULL)
+			{
+				ar[k++] = p->data;
+				p = p->next;
+			}
+		}
+	}
+
+	for(int i=0; i<RADIX; ++i)
+		SListClear(&list[i]);
+}
+void RadixSort(int *ar, int left, int right)
+{
+	for(int i=0; i<RADIX; ++i)
+	{
+		SListInit(&list[i]);
+	}
+	for(int i=0; i<K; ++i)
+	{
+		//1 分发
+		Distribute(ar, left, right, i);
+		//2 回收
+		Collect(ar);
+	}
+}
+
 /////////////////////////////////////////////////
 void TestSort(int *ar, int left, int right)
 {
@@ -293,7 +479,10 @@ void TestSort(int *ar, int left, int right)
 	//ShellSort(ar, left, right);
 	//SelectSort(ar, left, right);
 	//HeapSort(ar, left, right);
-	BubbleSort_1(ar, left, right);
+	//BubbleSort_1(ar, left, right);
+	//QuickSort(ar, left, right);
+	//MergeSort(ar, left, right);
+	RadixSort(ar, left, right);
 	PrintArray(ar, left, right);
 }
 
@@ -308,6 +497,7 @@ void TestSrotEfficiency()
 	int *a5 = (int*)malloc(sizeof(int) * n);
 	int *a6 = (int*)malloc(sizeof(int) * n);
 	int *a7 = (int*)malloc(sizeof(int) * n);
+	int *a8 = (int*)malloc(sizeof(int) * n);
 	srand(time(0));
 	for(int i=0; i<n; ++i)
 	{
@@ -319,6 +509,7 @@ void TestSrotEfficiency()
 		a5[i] = a[i];
 		a6[i] = a[i];
 		a7[i] = a[i];
+		a8[i] = a[i];
 	}
 
 	time_t start = clock();
@@ -360,6 +551,11 @@ void TestSrotEfficiency()
 	BubbleSort_1(a7, 0, n-1);
 	end = clock();
 	printf("BubbleSort: %u\n", end-start);
+
+	start = clock();
+	QuickSort(a8, 0, n-1);
+	end = clock();
+	printf("QuickSort: %u\n", end-start);
 }
 
 

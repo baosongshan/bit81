@@ -12,11 +12,40 @@
 //#include"bst.h"
 #include"sort.h"
 
+void main()
+{
+	//int ar[] = {49, 38, 65,97, 76, 13,27, 49};
+	//int ar[] = { 9, 1, 2, 5, 7, 4, 8, 6, 3 ,5};
+	//int ar[] = {6, 1, 2, 7, 9, 3, 4, 5, 10, 8};
+	//int ar[] = {10, 6, 7, 1, 3, 9, 4, 2};
+	int ar[] = {278, 109, 63, 930, 589, 184, 505, 269, 8, 83};
+	int n = sizeof(ar) / sizeof(int);
+	PrintArray(ar, 0, n-1);
+	TestSort(ar, 0, n-1);
+	TestSrotEfficiency();
+}
+
+/*
+int Compare(const void *e1, const void *e2)
+{
+	const int *elem1 = (const int*)e1;
+	const int *elem2 = (const int*)e2;
+	return (*elem1 - *elem2);
+}
 
 void main()
 {
 	//int ar[] = {49, 38, 65,97, 76, 13,27, 49};
 	int ar[] = { 9, 1, 2, 5, 7, 4, 8, 6, 3 ,5};
+	qsort(ar, 10, sizeof(int), Compare);
+}
+
+/*
+void main()
+{
+	//int ar[] = {49, 38, 65,97, 76, 13,27, 49};
+	int ar[] = { 9, 1, 2, 5, 7, 4, 8, 6, 3 ,5};
+	//int ar[] = {6, 1, 2, 7, 9, 3, 4, 5, 10, 8};
 	int n = sizeof(ar) / sizeof(int);
 	PrintArray(ar, 0, n-1);
 	TestSort(ar, 0, n-1);
