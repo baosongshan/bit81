@@ -208,7 +208,7 @@ void _AdjustDown(int *ar, int left, int right, int start)
 {
 	int n = right - left + 1;
 	int i = start;
-	int j = 2 * i + 1;
+	int j = 2 * i + 1 + left; //+left
 	while(j < n)
 	{
 		if(j+1<n && ar[j]<ar[j+1])
@@ -226,7 +226,7 @@ void _AdjustDown(int *ar, int left, int right, int start)
 void HeapSort(int *ar, int left, int right)
 {
 	int n = right-left+1;
-	int cur = n/2 - 1;
+	int cur = n/2 - 1 + left; //+left
 	while(cur)
 	{
 		_AdjustDown(ar, left, right, cur);

@@ -56,5 +56,8 @@
     <ClInclude Include="sort.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="hashtable.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
