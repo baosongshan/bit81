@@ -14,6 +14,73 @@
 
 //#include"hashtable.h"
 
+int Height(struct TreeNode *t)
+{
+    if(t == NULL)
+        return 0;
+    else
+    {
+        int left_h = Height(t->left);
+        int right_h = Height(t->right);
+        return (left_h > right_h ? left_h : right_h) + 1;        
+    }
+}
+int** levelOrder(struct TreeNode* root, int* returnSize, int** returnColumnSizes)
+{
+    if(root == NULL)
+    {
+        *returnSize = 0;
+        return NULL;
+    }
+
+    int max_level = Height(root);
+    *returnSize = max_level;
+    int **levelArray = (int**)malloc(sizeof(int*) * max_level);
+    *returnColumnSizes = (int*)malloc(sizeof(int) * max_level);
+
+    struct TreeNode *q1[1000], *q2[1000]; //
+    int q1_size=0, q2_size=0;
+
+    q1[0] = root;
+    q1_size++;
+    int level = 0;
+    while(level < max_level)
+    {
+        levelArray[level] = (int*)malloc(sizeof(int) * q1_size);
+        for(int i=0; i<q1_size; ++i)
+        {
+            levelArray[level][i] = q1[i]->val;
+        }
+        (*returnColumnSizes)[level] = q1_size;
+
+        for(int i=0; i<q1_size; ++i)
+        {
+            if(q1[i]->left != NULL)
+                q2[q2_size++] = q1[i]->left;
+            if(q1[i]->right != NULL)
+                q2[q2_size++] = q1[i]->right;
+        }
+
+        memcpy(q1, q2, sizeof(struct TreeNode*) * q2_size);
+        q1_size = q2_size;
+        q2_size = 0;
+
+        level++;
+    }
+    
+    return levelArray;
+}
+
+/*
+void main()
+{
+	char buf[100] = {0};
+	sprintf(buf, "%d %d", 10, 20);
+	printf("buf = %s\n", buf);
+
+}
+
+/*
 //现在有一个用来存放整数的Hash表，Hash表的存储单位称为桶，
 //每个桶能放3个整数，当一个桶中要放的元素超过3个时，
 //则要将新的元素存放在溢出桶中，每个溢出桶也能放3个元素，
@@ -27,24 +94,77 @@ struct bucket_node
 	int data[3];
 	struct bucket_node *next;
 };
+
 struct bucket_node hash_table[P];
 
 //现在假设hash_table已经初始化好了，
 //insert_new_element()函数目的是把一个新的值插入hash_table中，
 //元素插入成功时，函数返回0，否则返回-1，完成函数。
 
+int Hash(int key)
+{
+	return key % P;
+}
+
+void Init_bucket_node()
+{
+	for(int i=0; i<P; ++i)
+	{
+		for(int j=0; j<3; ++j)
+		{
+			hash_table[i].data[j] = NULL_DATA;
+		}
+		hash_table[i].next = NULL;
+	}
+}
+
 int insert_new_element(int new_element)
 {
+	int index = Hash(new_element);
+	for(int i=0; i<3; ++i)
+	{
+		if(hash_table[index].data[i] == NULL_DATA)
+		{
+			hash_table[index].data[i] = new_element;
+			return 0;
+		}
+	}
 
+	struct bucket_node *p = &hash_table[index];
+	while(p->next != NULL)
+	{
+		p = p->next;
+		for(int i=0; i<3; ++i)
+		{
+			if(p->data[i] == NULL_DATA)
+			{
+				p->data[i] = new_element;
+				return 0;
+			}
+		}
+	}
+
+	struct bucket_node *s = (struct bucket_node*)malloc(sizeof(struct bucket_node));
+	for(int i=0; i<3; ++i)
+	{
+		s->data[i] = NULL_DATA;
+	}
+	s->next = NULL;
+	s->data[0] = new_element;
+
+	p->next = s;
+
+	return 0;
 }
 ////////////////////////////////////////////////
 int main()
 {
 	Init_bucket_node(); //
 	int array[] = {15,14,21,87,96,293,35,24,149,19,63,16,103,77,5,153,145,356,51,68,705,453 };
+	//int array[] = {1,8,15, 22, 29, 36, 43};
 	for(int i = 0; i < sizeof(array)/sizeof(int); i++)
 	{
-		Insert_new_element(array[i]);
+		insert_new_element(array[i]);
 	}
 	return 0;
 }
