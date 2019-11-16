@@ -3,6 +3,160 @@
 #include<assert.h>
 #include<string.h>
 
+typedef struct ListNode
+{
+	int val;
+	struct ListNode *next;
+}ListNode;
+
+typedef ListNode* List;
+
+ 
+
+ListNode* CreateList(int ar[], int n)
+{
+	 ListNode *head = NULL;
+	 ListNode *tail = NULL;
+	 for(int i=0; i<n; ++i)
+	 {
+		 ListNode *s = (ListNode*)malloc(sizeof(ListNode));
+		 s->val = ar[i];
+		 s->next = NULL;
+
+		 if(head == NULL)
+		 {
+			 head = tail = s;
+		 }
+		 else
+		 {
+			 tail->next = s;
+			 tail = tail->next;
+		 }
+	 }
+	 return head;
+}
+
+ListNode* deleteDuplication(ListNode* pHead)
+{
+	 if (pHead == NULL)
+		 return NULL;
+	 ListNode *pPre = NULL;
+	 ListNode *pCur = pHead;
+	 ListNode *pNext = pHead->next;
+	 while(pNext != NULL)
+	 {
+		 if(pCur->val != pNext->val)
+		 {
+			 pPre = pCur;
+			 pCur = pNext;
+			 pNext = pNext->next;
+		 }
+		 else
+		 {
+			 while(pNext && pNext->val==pCur->val)
+			 {
+				 pNext = pNext->next;
+			 }
+			 if(pPre != NULL)
+				 pPre->next = pNext;
+			 else
+				 pHead = pNext;
+
+			 while(pCur != pNext)
+			 {
+				 ListNode *p = pCur;
+				 pCur = pCur->next;
+				 free(p);
+			 }
+
+			 if(pNext != NULL)
+				 pNext = pNext->next;
+		 }
+	 }
+	 return pHead;
+}
+
+void main()
+{
+	List mylist = NULL;
+	int ar[] = {1, 2, 3, 3, 4, 4, 5};
+	//int ar[] = {1, 2, 3, 3, 3, 3, 3};
+	//int ar[] = {1, 1, 1, 2, 3, 3, 3, 4, 5, 5, 5};
+	//int ar[] = {1, 1, 1, 1, 1, 1, 1};
+	//int ar[] = {1, 1, 1, 1, 2, 2, 2};
+	int n = sizeof(ar) / sizeof(int);
+	mylist = CreateList(ar, n);
+
+	mylist = deleteDuplication(mylist);
+}
+/*
+ListNode* deleteDuplication(ListNode* pHead)
+ {
+	 if (pHead == NULL)
+		 return NULL;
+	 ListNode *pPre = NULL;
+	 ListNode *pCur = pHead;
+	 ListNode *pNext = pHead->next;
+	 while (pNext != NULL)
+	 {
+		 if (pCur->val != pNext->val)
+		 {
+			 pPre = pCur;
+			 pCur = pNext;
+			 pNext = pNext->next;
+		 }
+		 else
+		 {
+			 while (pNext != NULL && pCur->val == pNext->val)
+			 {
+				 pCur = pNext;
+				 pNext = pNext->next;
+			 }
+
+			pCur = pNext;
+			if(pNext != NULL)
+				pNext = pNext->next;
+
+			ListNode *p, *q;
+			if(pPre == NULL)
+			{
+				q = pPre;
+				pPre = pHead;
+				pHead = pCur;
+			}
+			
+			p = pPre->next;
+			while(p != pCur)
+			{
+				pPre->next = p->next;
+				free(p);
+				p = pPre->next;
+			}
+			if(q==NULL || pPre==NULL)
+			{
+				free(pPre);
+				pPre = NULL;
+			}
+		 }
+	 }
+	 return pHead;
+ }
+
+ void main()
+ {
+	 List mylist = NULL;
+	 //int ar[] = {1, 2, 3, 3, 4, 4, 5};
+	 //int ar[] = {1, 2, 3, 3, 3, 3, 3};
+	 int ar[] = {1, 1, 1, 2, 3, 3, 3, 4, 5, 5, 5};
+	 //int ar[] = {1, 1, 1, 1, 1, 1, 1};
+	 //int ar[] = {1, 1, 1, 1, 2, 2, 2};
+	 int n = sizeof(ar) / sizeof(int);
+	 mylist = CreateList(ar, n);
+
+	 mylist = deleteDuplication(mylist);
+ }
+
+/*
 typedef struct TreeNode
 {
 	char data;
@@ -124,7 +278,7 @@ struct TreeNode {
 	TreeNode(int x) :
 			val(x), left(NULL), right(NULL) {
 	}
-};*/
+};
 class Solution {
 public:
     void ConvertList(TreeNode *t, TreeNode **pre)
@@ -153,3 +307,5 @@ public:
         return pHead;
     }
 };
+
+*/
