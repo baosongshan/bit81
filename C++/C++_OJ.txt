@@ -1,0 +1,200 @@
+Lesson_8  string
+1、仅仅反转字母  https://leetcode-cn.com/problems/reverse-only-letters/submissions/
+class Solution {
+public:
+
+    string reverseOnlyLetters(string S) 
+    {
+        char *left = (char *)S.c_str();  //const char *
+        char *right = left+S.size()-1;
+
+        while(left < right)
+        {
+            //查找左边第一个字母
+            while(left < right)
+            {
+                if(isalpha(*left))
+                    break;
+                left++;
+            }
+
+            //查找右边第一个字母
+            while(left < right)
+            {
+                if(isalpha(*right))
+                    break;
+                right--;
+            }
+
+            if(left < right)
+            {
+                char tmp = *left;
+                *left = *right;
+                *right = tmp;
+                left++;
+                right--;
+            }
+        }
+        return S;
+    }
+
+/*
+string reverseOnlyLetters(string S) 
+    {
+        int start = 0;
+        int end = S.size()-1;   //-1  
+
+        while(start < end)
+        {
+            //查找左边第一个字母
+            while(start < end)
+            {
+                if(isalpha(S[start]))
+                    break;
+                start++;
+            }
+
+            //查找右边第一个字母
+            while(start < end)
+            {
+                if(isalpha(S[end]))
+                    break;
+                end--;
+            }
+
+            if(start < end)
+            {
+                char tmp = S[start];
+                S[start] = S[end];
+                S[end] = tmp;
+                start++;
+                end--;
+            }
+        }
+        return S;
+    }
+    
+/*
+    string reverseOnlyLetters(string S) 
+    {
+        int start = 0;
+        int end = S.size()-1;   //-1  
+
+        while(start < end)
+        {
+            //查找左边第一个字母
+            while(start < end)
+            {
+                if((S[start]>='a'&&S[start]<='z') || (S[start]>='A'&&S[start]<='Z'))
+                    break;
+                start++;
+            }
+
+            //查找右边第一个字母
+            while(start < end)
+            {
+                if((S[end]>='a'&&S[end]<='z') || (S[end]>='A'&&S[end]<='Z'))
+                    break;
+                end--;
+            }
+
+            if(start < end)
+            {
+                char tmp = S[start];
+                S[start] = S[end];
+                S[end] = tmp;
+                start++;
+                end--;
+            }
+        }
+        return S;
+    }
+    
+/*
+    string reverseOnlyLetters(string S) 
+    {
+        int start = 0;
+        int end = S.size()-1;
+        while(start < end)
+        {
+            while(start < end)
+            {
+                if((S[start]>='a' && S[start]<='z')||(S[start]>='A'&&S[start]<='Z'))
+                    break;
+                start++;
+            }
+            while(start < end)
+            {
+                if((S[end]>='a' && S[end]<='z')||(S[end]>='A'&&S[end]<='Z'))
+                    break;
+                 end--;;
+            }
+            
+            if(start < end)
+            {
+                char tmp = S[start];
+                S[start] = S[end];
+                S[end] = tmp;
+                start++;
+                end--;
+            }
+        }    
+        return S;
+    }
+    */
+};
+
+
+字符串中的第一个唯一字符  : https://leetcode-cn.com/problems/first-unique-character-in-a-string/
+class Solution {
+public:
+    int firstUniqChar(string s) 
+    {
+        for(int i=0; i<s.size(); ++i)
+        {
+            size_t index_1 = s.find(s[i]);
+            size_t index_2 = s.rfind(s[i]);
+            if(index_1 == index_2)
+                return i;
+        }
+        return -1;
+    }
+/*
+    int firstUniqChar(string s) 
+    {
+        int count[256] = {0};
+        for(int i=0; i<s.size(); ++i)
+        {
+            count[s[i]] += 1;
+        }    
+
+        for(int i=0; i<s.size(); ++i)
+        {
+            if(count[s[i]] == 1)
+                return i;
+        }
+        return -1;
+    }
+    */
+};
+
+
+3、计算字符串最后一个单词的长度，单词以空格隔开。https://www.nowcoder.com/practice/8c949ea5f36f422594b306a2300315da	
+#include<iostream>
+#include<string>
+using namespace std;
+
+int main()
+{
+    string str;
+    //cin>>str;  //hello world
+    while(getline(cin, str))
+    {
+        size_t pos = str.rfind(' ');
+        if(pos == string::npos)
+            printf("%d", str.size());
+        else
+            printf("%d",str.size() - pos - 1);
+    }
+    return 0;
+}
