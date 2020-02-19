@@ -2,33 +2,23 @@
 #include<assert.h>
 #include<string>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 void main()
 {
-	vector<int> v;
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(1);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(2);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(3);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(4);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(5);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(6);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
-	v.push_back(7);
-	cout<<"size = "<<v.size()<<endl;
-	cout<<"capacity = "<<v.capacity()<<endl;
+	int ar[] = {1,2,3,4,5,6,7,8,9,10,11,12};
+	vector<int> v(ar, ar+12);
 
+	vector<int>::iterator p = find(v.begin(), v.end(), 10); 
+
+	vector<int>::iterator it = find(v.begin(), v.end(), 3); 
+	cout<<"*it = "<<*it<<endl;
+
+	//1 it在删除数据的后面，此时数据会往前移动，迭代器失效
+	//2 it在删除数据的前面，此时迭代器所指数据不会发生变化，迭代任然有效
+	//v.erase(v.begin());
+	v.erase(p);
+
+	cout<<"*it = "<<*it<<endl;
 }
