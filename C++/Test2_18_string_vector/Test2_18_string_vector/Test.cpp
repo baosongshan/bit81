@@ -500,7 +500,6 @@ void main()
 	cout<<"str = "<<str<<endl;
 }
 
-
 /*
 class String
 {
