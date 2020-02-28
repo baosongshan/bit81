@@ -2,6 +2,7 @@
 #include<list>
 #include<vector>
 #include<assert.h>
+#include<vld.h>
 using namespace std;
 
 class Test
@@ -46,7 +47,7 @@ namespace bit
 		{//return &(_Ptr->_Value);
 			return &**this;
 		}
-
+		
 		slef& operator++()
 		{
 			_Ptr = _Ptr->_Next;
@@ -58,6 +59,7 @@ namespace bit
 			++*this;
 			return tmp;
 		}
+		
 		slef& operator--()
 		{
 			_Ptr = _Ptr->_Prev;
@@ -96,7 +98,15 @@ namespace bit
 			while(n--)
 				push_back(value);
 		}
-		template<typename _It>
+		list(T *first, T *last):_Head(_Buynode()),_Size(0)
+		{
+			while(first != last)
+			{
+				push_back(*first);
+				first++;
+			}
+		}
+		typedef iterator _It;
 		list(_It first, _It last):_Head(_Buynode()),_Size(0)
 		{
 			while(first != last)
@@ -111,14 +121,23 @@ namespace bit
 			swap(tmp);
 		}
 
-		//ื๗าต
-		list<T>& operator=(const list<T> &lt);
-		~list();
-		void clear();
-		iterator erase(iterator pos);
-		T& back();
-		const T& back()const;
-
+		list<T>& operator=(const list<T> &lt)
+		{
+			if(this != &lt)
+			{
+				list<T> tmp(lt);
+				swap(tmp);
+			}
+			return *this;
+		}
+		
+		~list()
+		{
+			clear();
+			delete _Head;
+			_Head = nullptr;
+		}
+		
 	public:
 		size_t size()const
 		{return _Size;}
@@ -148,11 +167,28 @@ namespace bit
 			assert(!empty());
 			return *begin();
 		}
+		T& back()
+		{
+			assert(!empty());
+			return *--end();
+		}
+		const T& back()const
+		{
+			assert(!empty());
+			return *--end();
+		}
 		
 		void swap(list<T> & lt)
 		{
 			std::swap(_Head, lt._Head);
 			std::swap(_Size, lt._Size);
+		}
+		void clear()
+		{
+			while(size() != 0)
+				erase(begin());
+
+			//erase(begin(), end());
 		}
 	public:
 		iterator insert(iterator pos, const T &val)
@@ -168,6 +204,16 @@ namespace bit
 			_Size++;
 			return iterator(_S);
 		}
+		iterator erase(iterator pos)
+		{
+			PNode p = pos++.Mynode();
+			p->_Prev->_Next = p->_Next;
+			p->_Next->_Prev = p->_Prev;
+			delete p;
+			_Size--;
+			return pos; 
+		}
+		//iterator erase(iterator first, iterator last);
 	private:
 		PNode _Buynode(const T &val = T())
 		{
@@ -185,8 +231,24 @@ void main()
 {
 	int ar[] = {1,2,3,4,5};
 	bit::list<int> mylist(ar, ar+5);
+	//cout<<"back = "<<mylist.back()<<endl;
 
-	bit::list<int> youlist(mylist);
+	//c++11
+	for(const auto &e : mylist)  //begin() end() ++
+		cout<<e<<"-->";
+	cout<<"Over."<<endl;
+
+}
+
+/*
+void main()
+{
+	int ar[] = {1,2,3,4,5};
+	bit::list<int> mylist(ar, ar+5);
+
+	//bit::list<int> youlist(mylist);
+	//bit::list<int> youlist(5,1);
+	bit::list<int> youlist(mylist.begin(), mylist.end());
 
 	for(const auto &e : youlist)
 		cout<<e<<"-->";
