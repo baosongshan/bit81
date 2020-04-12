@@ -24,12 +24,24 @@
     <ClInclude Include="sqlite3.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="DataManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ScanManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DocFastSearchTool.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Susutil.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DataManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ScanManager.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
