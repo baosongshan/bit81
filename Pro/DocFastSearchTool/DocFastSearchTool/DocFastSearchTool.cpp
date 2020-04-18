@@ -3,6 +3,7 @@
 #include"./sqlite/sqlite3.h"
 #include"DataManager.h"
 #include"ScanManager.h"
+#include"Sysframe.h"
 
 
 
@@ -135,12 +136,85 @@ void Test_Map()
 	
 }
 
-
-void Test_Scan()
+void Test_Search()
 {
 	const string &path = "C:\\Users\\baoso\\Desktop\\Pro_81\\my_dir";
-	ScanManager sm;
-	sm.ScanDirectory(path);
+	
+	//创建扫描实例
+	ScanManager::CreateInstance(path).ScanDirectory(path);
+	//sm.ScanDirectory(path);
+
+	//创建搜索实例
+	DataManager &dm = DataManager::GetInstance();
+
+	string key;
+	vector<pair<string, string>> doc_path;
+	while(1)
+	{
+		cout<<"请输入要搜索的关键字:>";
+		cin>>key;
+		dm.Search(key, doc_path);
+
+		//显示结果
+		printf("%-15s%-50s\n", "名称","路径");
+		for(const auto &e : doc_path)
+			printf("%-15s%-50s\n",e.first.c_str(), e.second.c_str());
+	}
+}
+
+void Test_ChineseConvert()
+{
+	string str = "冯超";
+	string pinyin = ChineseConvertPinYinAllSpell(str);
+	cout<<"pinyin = "<<pinyin<<endl;
+
+	string initials = ChineseConvertPinYinInitials(str);
+	cout<<"initials = "<<initials<<endl;
+}
+
+void Test_Frame()
+{
+	char *title = "文档快速搜索工具";
+	DrawFrame(title);
+}
+
+void main()
+{
+	//Test_Search();
+	//Test_ChineseConvert();
+	Test_Frame();
+}
+
+/*
+void thread_fun(int n)
+{
+	for(int i=0; i<n; ++i)
+	{
+		cout<<"This is Child Thread."<<endl;
+	}
+}
+
+class Test
+{
+public:
+	void fun()
+	{
+		cout<<"This is Test::fun()"<<endl;
+	}
+};
+
+void Test_Thread()
+{
+	Test t;
+	thread th(&Test::fun, &t);
+	th.detach();  //分离
+
+	for(int i=0; i<10; ++i)
+	{
+		cout<<"This is Main Thread."<<endl;
+	}
+
+	//th.join();
 }
 
 int main(int argc, char *argv[])
@@ -151,7 +225,9 @@ int main(int argc, char *argv[])
 	//Test_Log();
 	//Test_Set();
 	//Test_Map();
-	Test_Scan();
+	//Test_Scan();
+	//Test_Search();
+	Test_Thread();
 	return 0;
 }
 

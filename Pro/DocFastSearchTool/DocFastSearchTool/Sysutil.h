@@ -68,3 +68,9 @@ inline static void __ErrorDebug(const char* filename, int line, const char* func
 
 #define ERROR_LOG(...) \
 	__ErrorDebug(__FILE__, __LINE__, __FUNCTION__, __VA_ARGS__);
+
+
+////////////////////////////////////////////////////////
+//ÖÐ¼äÂß¼­²ã
+std::string ChineseConvertPinYinAllSpell(const std::string& dest_chinese);
+std::string ChineseConvertPinYinInitials(const std::string& name);

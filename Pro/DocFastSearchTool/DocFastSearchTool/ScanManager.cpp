@@ -1,6 +1,25 @@
 #include"ScanManager.h"
 #include"Sysutil.h"
 
+ScanManager::ScanManager()
+{}
+void ScanManager::StartScan(const string &path)
+{
+	while(1)
+	{
+		//等待3秒在扫描
+		this_thread::sleep_for(chrono::seconds(30));
+		ScanDirectory(path);
+	}
+}
+ScanManager& ScanManager::CreateInstance(const string &path)
+{
+	static ScanManager inst;
+	thread scan_thread(&StartScan, &inst, path);
+	scan_thread.detach();
+	return inst;
+}
+
 void ScanManager::ScanDirectory(const string &path)
 {
 	//1 扫描本地文件系统
@@ -12,6 +31,8 @@ void ScanManager::ScanDirectory(const string &path)
 	local_set.insert(local_dirs.begin(), local_dirs.end());
 
 	//2 扫描数据库文件系统
+	DataManager &m_db = DataManager::GetInstance();
+
 	multiset<string> db_set;
 	m_db.GetDocs(path, db_set);
 
@@ -54,5 +75,11 @@ void ScanManager::ScanDirectory(const string &path)
 	}
 
 	//递归遍历子目录
-	//
+	for(const auto &dir : local_dirs)
+	{
+		string dir_path = path; //C:\Users\baoso\Desktop\Pro_81\my_dir
+		dir_path += "\\";       // C:\Users\baoso\Desktop\Pro_81\my_dir\ 
+		dir_path += dir;        //C:\Users\baoso\Desktop\Pro_81\my_dir\AA
+		ScanDirectory(dir_path);
+	}
 }
