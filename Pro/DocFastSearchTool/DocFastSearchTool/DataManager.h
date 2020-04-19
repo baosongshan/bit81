@@ -54,6 +54,8 @@ public:
 	void DeleteDoc(const string &path, const string &doc);
 public:
 	void Search(const string &key, vector<pair<string,string>> &doc_path);
+	static void SplitHighlight(const string &str, const string &key, 
+							   string &prefix, string &highlight, string &suffix);
 private:
 	DataManager();
 private:

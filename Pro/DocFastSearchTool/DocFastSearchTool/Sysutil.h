@@ -74,3 +74,5 @@ inline static void __ErrorDebug(const char* filename, int line, const char* func
 //ÖÐ¼äÂß¼­²ã
 std::string ChineseConvertPinYinAllSpell(const std::string& dest_chinese);
 std::string ChineseConvertPinYinInitials(const std::string& name);
+
+void ColourPrintf(const char* str);

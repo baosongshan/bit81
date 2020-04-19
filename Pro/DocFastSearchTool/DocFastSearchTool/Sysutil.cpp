@@ -185,3 +185,22 @@ std::string ChineseConvertPinYinInitials(const std::string& name)
 	}
 	return result;
 }
+
+void ColourPrintf(const char* str)
+{
+	// 0-ºÚ 1-À¶ 2-ÂÌ 3-Ç³ÂÌ 4-ºì 5-×Ï 6-»Æ 7-°× 8-»Ò 9-µ­À¶ 10-µ­ÂÌ
+	// 11-µ­Ç³ÂÌ 12-µ­ºì 13-µ­×Ï 14-µ­»Æ 15-ÁÁ°×
+	//ÑÕÉ«£ºÇ°¾°É« + ±³¾°É«*0x10
+	//ÀýÈç£º×ÖÊÇºìÉ«£¬±³¾°É«ÊÇ°×É«£¬¼´ ºìÉ« + ÁÁ°× = 4 + 15*0x10
+	//WORD color = 4 + 15 * 0x10;
+
+	WORD color = 11 + 0 * 0x10;
+	WORD colorOld;
+	HANDLE handle = ::GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO csbi;
+	GetConsoleScreenBufferInfo(handle, &csbi);
+	colorOld = csbi.wAttributes;
+	SetConsoleTextAttribute(handle, color);
+	printf("%s", str);
+	SetConsoleTextAttribute(handle, colorOld);
+}

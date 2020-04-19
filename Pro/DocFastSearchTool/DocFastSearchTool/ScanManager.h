@@ -8,6 +8,7 @@ public:
 	static ScanManager& CreateInstance(const string &path);
 public:
 	void StartScan(const string &path);
+	void StartWatch(); // ¼à¿ØÏß³Ì
 	void ScanDirectory(const string &path);
 private:
 	ScanManager();
