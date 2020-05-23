@@ -30,22 +30,116 @@ struct __hashtable_node
 	Value val;
 };
 
-template <class Key, class Value>
+template <class Key, class Value, class HashFcn, class ExtractKey>
+class hashtable;
+
+/////////////////////////////////////////////////////////////////////////////////////
+template <class Key, class Value, class HashFcn, class ExtractKey>
+struct __hashtable_iterator 
+{
+  typedef hashtable<Key,Value , HashFcn, ExtractKey> hashtable;
+  typedef __hashtable_iterator<Key,Value , HashFcn, ExtractKey> iterator;
+  typedef __hashtable_node<Value> node;
+  typedef Value&  reference;
+  typedef Value* pointer;
+  typedef size_t size_type;
+
+
+  node* cur;
+  hashtable* ht;
+
+  __hashtable_iterator(node* n, hashtable* tab) : cur(n), ht(tab) 
+  {}
+  __hashtable_iterator()
+  {}
+  reference operator*() const 
+  {
+	  return cur->val; 
+  }
+  pointer operator->() const 
+  {
+	  return &(operator*()); 
+  }
+
+  iterator& operator++()
+  {
+	  const node* old = cur;
+	  cur = cur->next;
+	  if (!cur) 
+	  {
+		  size_type bucket = ht->bkt_num(old->val);
+		  while (!cur && ++bucket < ht->buckets.size())
+			  cur = ht->buckets[bucket];
+	  }
+	  return *this;
+  }
+  iterator operator++(int);
+  bool operator==(const iterator& it) const
+  {
+	  return cur == it.cur;
+  }
+  bool operator!=(const iterator& it) const 
+  { 
+	  return cur != it.cur; 
+  }
+};
+//////////////////////////////////////////////////////////////////////////////////////////
+
+//key-value
+template <class Key, class Value, class HashFcn, class ExtractKey>
 class hashtable 
 {
+	friend struct __hashtable_iterator<Key,Value , HashFcn, ExtractKey>;
 public:
 	typedef __hashtable_node<Value> node;
 	typedef size_t size_type;
 	typedef Value  value_type;
+	typedef Key    key_type;
+
+	typedef HashFcn hasher; 
+
+	typedef __hashtable_iterator<Key,Value , HashFcn, ExtractKey> iterator;
+ 
 public:
-	hashtable(size_type n) :num_elements(0)
+	hashtable(size_type n)
 	{
 		initialize_buckets(n);
+	}
+	void print_hashtable()
+	{
+		for(int i=0; i<buckets.size(); ++i)
+		{
+			cout<<i<<":";
+			node *p = buckets[i];
+			while(p != NULL)
+			{
+				cout<<p->val<<"->";
+				p = p->next;
+			}
+			cout<<"Nil"<<endl;
+
+		}
+	}
+public:
+	iterator begin()
+	{
+		node *p;
+		for(int i=0; i<buckets.size(); ++i)
+		{
+			p = buckets[i];
+			if(p != NULL)
+				break;
+		}
+		return iterator(p, this);
+	}
+	iterator end()
+	{
+		return iterator(0, this);
 	}
 public:
 	bool insert_unique(const value_type& obj)
 	{
-
+		resize(num_elements + 1);
 		return insert_unique_noresize(obj);
 	}
 	bool insert_unique_noresize(const value_type& obj)
@@ -63,10 +157,54 @@ public:
 		++num_elements;
 		return true;
 	}
+
+	iterator insert_equal(const value_type& obj)
+	{
+		resize(num_elements + 1);
+		return insert_equal_noresize(obj);
+	}
+	iterator insert_equal_noresize(const value_type& obj)
+	{
+		const size_type n = bkt_num(obj);
+		node* first = buckets[n];
+
+		for (node* cur = first; cur; cur = cur->next)
+		{
+			//if (equals(get_key(cur->val), get_key(obj))) 
+			if (get_key(cur->val) == get_key(obj))
+			{
+				node* tmp = new_node(obj);
+				tmp->next = cur->next;
+				cur->next = tmp;
+				++num_elements;
+				return iterator(tmp, this);
+			}
+		}
+		
+		node* tmp = new_node(obj);
+		tmp->next = first;
+		buckets[n] = tmp;
+		++num_elements;
+		return iterator(tmp, this);
+	}
 private:
+	void resize(size_type num_elements_hint);
+
+	size_type bkt_num_key(const key_type& key) const
+	{
+		return bkt_num_key(key, buckets.size());
+	}
 	size_type bkt_num(const value_type& obj) const
 	{
-		return obj % buckets.size();
+		return bkt_num_key(get_key(obj));
+	}
+	size_type bkt_num_key(const key_type& key, size_t n) const
+	{
+		return hash(key) % n;
+	}
+	size_type bkt_num(const value_type& obj, size_t n) const
+	{
+		return bkt_num_key(get_key(obj), n);
 	}
 	node* new_node(const value_type& obj)
 	{
@@ -86,16 +224,372 @@ private:
 		buckets.insert(buckets.end(), n_buckets, (node*)0);
 		num_elements = 0;
 	}
+
+private:
+	hasher      hash;
+	ExtractKey  get_key;
 private:
 	vector<node*> buckets;
 	size_type num_elements;
 };
 
+template <class Key, class Value, class HashFcn, class ExtractKey>
+void hashtable<Key, Value, HashFcn, ExtractKey>::resize(size_type num_elements_hint)
+{
+	size_type old_n = buckets.size();
+	if(num_elements_hint > old_n)
+	{
+		//µ÷Õû
+		const size_type n = next_size(num_elements_hint);
+		if(n > old_n)
+		{
+			vector<node*> tmp(n, (node*)0);  //
+			for (size_type bucket = 0; bucket < old_n; ++bucket)
+			{
+				node* first = buckets[bucket];
+				while (first)
+				{
+					size_type new_bucket = bkt_num(first->val, n);
+					buckets[bucket] = first->next;
+					
+					first->next = tmp[new_bucket];
+					tmp[new_bucket] = first;
+					first = buckets[bucket];
+				}
+			}
+			buckets.swap(tmp);
+		}
+	}
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+struct hashfun
+{
+	const int operator()(int x)const
+	{
+		return x;
+	}
+};
+
+struct KeyOfValue
+{
+	const int operator()(const pair<int, int> &s)const
+	{
+		return s.first;
+	}
+};
+
+template<class Type>
+class my_unordered_set
+{
+public:
+	typedef hashtable<Type, Type,hashfun, KeyOfValue> hashtable;
+	typedef __hashtable_iterator<Type,Type , hashfun, KeyOfValue> iterator;
+public:
+	my_unordered_set()
+	{
+		ht = new hashtable(53);
+	}
+	~my_unordered_set()
+	{
+		delete ht;
+	}
+public:
+	iterator begin()
+	{
+		return ht->begin();
+	}
+	iterator end()
+	{
+		return ht->end();
+	}
+public:
+	void insert(const Type &x)
+	{
+		ht->insert_unique(x);
+	}
+private:
+	hashtable *ht;
+};
+
+//////////////////////////////////////////////////////////////////////////////////
+template<class Type>
+class my_unordered_multiset
+{
+public:
+	typedef hashtable<Type, Type,hashfun, KeyOfValue> hashtable;
+	typedef __hashtable_iterator<Type,Type , hashfun, KeyOfValue> iterator;
+public:
+	my_unordered_multiset()
+	{
+		ht = new hashtable(53);
+	}
+	~my_unordered_multiset()
+	{
+		delete ht;
+	}
+public:
+	iterator begin()
+	{
+		return ht->begin();
+	}
+	iterator end()
+	{
+		return ht->end();
+	}
+public:
+	void insert(const Type &x)
+	{
+		ht->insert_equal(x);
+	}
+private:
+	hashtable *ht;
+};
+
+/////////////////////////////////////////////////////////////////////////
+
+template<class Key, class Value>
+class my_unordered_map
+{
+public:
+
+	typedef hashtable<Key, pair<Key, Value>,hashfun, KeyOfValue> hashtable;
+	typedef __hashtable_iterator<Key, pair<Key, Value> , hashfun, KeyOfValue> iterator;
+public:
+	my_unordered_map()
+	{
+		ht = new hashtable(53);
+	}
+	~my_unordered_map()
+	{
+		delete ht;
+	}
+public:
+	iterator begin()
+	{
+		return ht->begin();
+	}
+	iterator end()
+	{
+		return ht->end();
+	}
+public:
+	void insert(const pair<Key, Value> &x)
+	{
+		ht->insert_unique(x);
+	}
+private:
+	hashtable *ht;
+};
+
+template<class Key, class Value>
+class my_unordered_multimap
+{
+public:
+
+	typedef hashtable<Key, pair<Key, Value>,hashfun, KeyOfValue> hashtable;
+	typedef __hashtable_iterator<Key, pair<Key, Value> , hashfun, KeyOfValue> iterator;
+public:
+	my_unordered_multimap()
+	{
+		ht = new hashtable(53);
+	}
+	~my_unordered_multimap()
+	{
+		delete ht;
+	}
+public:
+	iterator begin()
+	{
+		return ht->begin();
+	}
+	iterator end()
+	{
+		return ht->end();
+	}
+public:
+	void insert(const pair<Key, Value> &x)
+	{
+		ht->insert_equal(x);
+	}
+private:
+	hashtable *ht;
+};
+
+
 void main()
 {
-	hashtable<int, int> ht(53); //int-string
-	ht.insert_unique(1);
-	ht.insert_unique(54);
+	my_unordered_multimap<int, int> mp;
+	mp.insert(make_pair(1,11));
+	mp.insert(make_pair(5,55));
+	mp.insert(make_pair(3,33));
+	mp.insert(make_pair(2,22));
+	mp.insert(make_pair(5,55));
+	mp.insert(make_pair(3,33));
+
+	for(auto &e : mp)
+		cout<<e.first<<" : "<<e.second<<endl;
+
+}
+
+/*
+void main()
+{
+	my_unordered_multiset<int> myunset;
+	myunset.insert(1);
+	myunset.insert(55);
+	myunset.insert(5);
+	myunset.insert(62);
+	myunset.insert(5);
+	myunset.insert(62);
+	myunset.insert(5);
+	myunset.insert(62);
+	myunset.insert(30);
+
+	auto it = myunset.begin();
+	while(it != myunset.end())
+	{
+		cout<<*it<<" ";
+		++it;
+	}
+	cout<<endl;
+}
+
+/*
+////////////////////////////////////////////////////////////////////////////////////////////
+
+class Student
+{
+public:
+	Student(char *n, int a, char *s)
+	{
+		strcpy(name,n);
+		age = a;
+		strcpy(sex, s);
+	}
+public:
+	bool operator==(const Student &s)
+	{
+		return this == &s;
+	}
+public:
+	char name[10];
+	int age;
+	char sex[3];
+};
+
+
+template<class T>  
+size_t BKDRHash(const T *str)  
+{  
+    register size_t hash = 0;  
+    while (size_t ch = (size_t)*str++)  
+    {         
+        hash = hash * 131 + ch;         
+    }  
+    return hash;  
+} 
+struct hashfun
+{
+	const size_t operator()(const size_t key)const
+	{
+		return key;
+	}
+};
+struct KeyOfValue
+{
+	size_t operator()(const char* s)const
+	{
+		return BKDRHash(s);
+	}
+};
+void main()
+{
+	char * str[] = {"fjalfja", "hellofafl","abcxyz"};
+	hashtable<int, char*, hashfun, KeyOfValue> ht(5); 
+
+	ht.insert_unique(str[0]);
+	ht.insert_unique(str[1]);
+	ht.insert_unique(str[2]);
+
+}
+
+/*
+struct hashfun
+{
+	const int operator()(int x)const
+	{
+		return x;
+	}
+};
+
+struct KeyOfValue
+{
+	const int operator()(const int &s)const
+	{
+		return s;
+	}
+};
+
+
+
+/*
+void main()
+{
+	hashtable<int, int, hashfun, KeyOfValue> ht(5); //int-string
+	ht.insert_unique(59);
+	ht.insert_unique(63);
+	ht.insert_unique(108);
+	ht.insert_unique(2);
+	ht.insert_unique(53);
+	ht.insert_unique(55);
+	ht.insert_equal(55);
+	ht.insert_equal(55);
+	//ht.print_hashtable();
+	hashtable<int, int, hashfun, KeyOfValue>::iterator it = ht.begin();
+	while(it != ht.end())
+	{
+		cout<<*it<<" ";
+		++it;
+	}
+	cout<<endl;
+}
+
+/*
+struct KeyOfValue
+{
+	const int operator()(const Student &s)const
+	{
+		return s.age;
+	}
+};
+void main()
+{
+	Student s[] = {{"abc", 15, "ÄÐ"}, {"xyz", 20, "Å®"},{"hjk", 56, "ÄÐ"}};
+	
+	hashtable<int, Student, hashfun, KeyOfValue> ht(5); //int-string
+	
+	for(int i=1; i<=53; ++i)   //53
+		ht.insert_unique(s[i]);
+}
+
+/*
+void main()
+{
+	hashtable<int, int> ht(5); //int-string
+	
+	for(int i=1; i<=53; ++i)   //53
+		ht.insert_unique(i);
+
+	ht.print_hashtable();
+
+	ht.insert_unique(54); //54
+
+	//for(int i=54; i<=106; ++i) 
+	//ht.insert_unique(i);
+
+	ht.print_hashtable();
+
+	return;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
