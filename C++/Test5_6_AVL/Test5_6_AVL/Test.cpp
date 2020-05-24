@@ -217,13 +217,171 @@ bool AVLTree<Type>::Insert(AVLNode<Type> *&t, const Type &x)
 	return true;
 }
 
+template<class Type>
+bool AVLTree<Type>::Remove(AVLNode<Type> *&t, const Type &key)
+{
+	AVLNode<Type> *pr = nullptr;
+	AVLNode<Type> *p = t, *q;
+	stack<AVLNode<Type>*> st;
+	while(p != nullptr)
+	{
+		if(key == p->data)
+			break;
+
+		pr = p;
+		st.push(pr);
+		
+		if(key < p->data)
+			p = p->leftChild;
+		else
+			p = p->rightChild;
+	}
+	if(p == nullptr)
+		return false;
+
+	if(p->leftChild!=nullptr && p->rightChild!=nullptr)
+	{
+		pr = p;
+		st.push(pr);
+
+		q = p->rightChild;
+		while(q->leftChild != nullptr)
+		{
+			pr = q;
+			st.push(pr);
+			q = q->leftChild;
+		}
+		p->data = q->data;
+		p = q;
+	}
+
+	if(p->leftChild != nullptr)
+		q = p->leftChild;
+	else
+		q = p->rightChild;
+
+	//p被删除节点，q删除节点子女节点
+	if(pr == nullptr)
+		t = q;
+	else
+	{
+		if(p == pr->leftChild)
+			pr->leftChild = q;
+		else
+			pr->rightChild = q;
+
+		//调整平衡
+		while(!st.empty())
+		{
+			pr = st.top();
+			st.pop();
+
+			if(p->data < pr->data)
+				pr->bf++;
+			else
+				pr->bf--;
+
+			if(pr->bf==1 || pr->bf==-1)
+				break;
+
+			if(pr->bf != 0)
+			{
+				//让q指向较高子树
+				if(pr->bf < 0)
+					q = pr->leftChild;
+				else
+					q = pr->rightChild;
+
+				if(q->bf == 0)
+				{
+					if(pr->bf < 0)
+					{
+						RotateR(pr);
+						pr->bf = 1;
+						pr->rightChild->bf = -1;
+					}
+					else
+					{
+						RotateL(pr);
+						pr->bf = -1;
+						pr->leftChild->bf = 1;
+					}
+
+					if(!st.empty())
+					{
+						AVLNode<Type> *ppr = st.top();
+						if (ppr->data < pr->data)
+							ppr->rightChild = pr;
+						else
+							ppr->leftChild = pr;
+					}
+					else
+						t = pr;
+					
+					break;
+				}
+
+				if(pr->bf < 0)
+				{
+					if(q->bf < 0)
+					{
+						RotateR(pr);
+					}
+					else
+					{
+						RotateLR(pr);
+					}
+				}
+				else
+				{
+					if(q->bf > 0)
+					{
+						RotateL(pr);
+					}
+					else
+					{
+						RotateRL(pr);
+					}
+				}
+
+				if (!st.empty())
+				{
+					AVLNode<Type> *ppr = st.top();
+					if (ppr->data < pr->data)
+						ppr->rightChild = pr;
+					else
+						ppr->leftChild = pr;
+				}
+				else
+					t = pr;
+			}
+
+			q = pr;
+
+		}//end while
+	}
+
+	delete p;
+	return true;
+}
+
 int  main()
 {
-	vector<int> iv{10, 7, 3, 5, 20, 13, 16, 19, 23, 14};
+	//vector<int> iv{10, 7, 3, 5, 20, 13, 16, 19, 23, 14};
 	//vector<int> iv{10, 70, 300 };
+
+	vector<int> iv{16,3,7,11,9,26,18,14,15};
+
 	AVLTree<int> avl;
 	for(const auto &e : iv)
 		avl.Insert(e);
+
+	avl.Remove(14);
+	avl.Remove(16);
+	avl.Remove(15);
+	avl.Remove(26);
+
+	avl.Remove(18);
 
 	return 0;
 }
