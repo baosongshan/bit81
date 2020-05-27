@@ -150,9 +150,16 @@ public:
 	{
 		return Insert(root, x);
 	}
+	bool Remove(const Type &key)
+	{
+		return Remove(root, key);
+	}
 protected:
 	bool Insert(RBTreeNode<Type> *&t, const Type &x);
 	void Insert_Fixup(RBTreeNode<Type> *&t, RBTreeNode<Type> *x);
+public:
+	bool Remove(RBTreeNode<Type> *&t, const Type &key);
+	void Remove_FixUp(RBTreeNode<Type> *&t, RBTreeNode<Type> *x);
 protected:
 	void RightRotate(RBTreeNode<Type> *&t, RBTreeNode<Type> *p);
 	void LeftRotate(RBTreeNode<Type> *&t, RBTreeNode<Type> *p);
@@ -257,6 +264,139 @@ void RBTree<Type>::Insert_Fixup(RBTreeNode<Type> *&t, RBTreeNode<Type> *x)
 }
 
 template<class Type>
+bool RBTree<Type>::Remove(RBTreeNode<Type> *&t, const Type &key)
+{
+	//1 根据bst删除节点
+	RBTreeNode<Type> *p = t, *q, *c;
+	while(p!=NIL && p->data!=key)
+	{
+		if(key < p->data)
+			p = p->leftChild;
+		else
+			p = p->rightChild;
+	}
+	if(p == NIL)
+		return false;
+
+	//把删除的节点化解为最终只有一个子女节点
+	if(p->leftChild!=NIL && p->rightChild!=NIL)
+	{
+		q = p->rightChild;
+		while(q->leftChild != NIL)
+			q = q->leftChild;
+	}
+	else
+		q = p;
+
+	if(q->leftChild != NIL)
+		c = q->leftChild;
+	else
+		c = q->rightChild;
+
+	c->parent = q->parent;
+	if(q->parent == NIL)
+		t = c;
+	else if(q = q->parent->leftChild)
+		q->parent->leftChild = c;
+	else
+		q->parent->rightChild = c;
+
+	if(p != q)
+		p->data = q->data;
+
+	//2 调整平衡
+	if(q->color == BLACK)
+		Remove_FixUp(t, c);
+	delete q;
+	return true;
+}
+
+template<class Type>
+void RBTree<Type>::Remove_FixUp(RBTreeNode<Type> *&t, RBTreeNode<Type> *x)
+{
+	RBTreeNode<Type> *w; //兄弟节点
+	while(x!=t && x->color==BLACK)
+	{
+		if(x == x->parent->leftChild) 
+		{
+			//左分支
+			w = x->parent->rightChild;
+
+			//情形四
+			if(w->color == RED)
+			{
+				w->color = BLACK;
+				x->parent->color = RED;
+				LeftRotate(t, x->parent);
+				w = x->parent->rightChild;
+			}
+
+			//情形三
+			if(w->leftChild->color==BLACK && w->rightChild->color==BLACK)
+			{
+				w->color = RED;
+				x = x->parent;
+			}
+			else
+			{
+				//情形二
+				//if(w->leftChild->color == RED)
+				if (w->rightChild->color == BLACK)
+				{
+					w->leftChild->color = BLACK;
+					w->color = RED;
+					RightRotate(t, w);
+					w = x->parent->rightChild;
+				}
+				//情形一
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
+				w->rightChild->color = BLACK;
+				LeftRotate(t, x->parent);
+				x = t;
+			}			
+		}
+		else
+		{
+			//右分支
+			w = x->parent->leftChild;
+			//情形四
+			if(w->color == RED)
+			{
+				w->color = BLACK;
+				x->parent->color = RED;
+				RightRotate(t, x->parent);
+				w = x->parent->leftChild;
+			}
+			//情形三
+			if(w->leftChild->color==BLACK && w->rightChild->color==BLACK)
+			{
+				w->color = RED;
+				x = x->parent;
+			}
+			else
+			{
+				//情形二
+				if(w->leftChild->color == BLACK)
+				{
+					w->rightChild->color = BLACK;
+					w->color  = RED;
+					LeftRotate(t, w);
+					w = x->parent->leftChild;
+				}
+				//情形一
+				w->color = x->parent->color;
+				x->parent->color = BLACK;
+				w->leftChild->color = BLACK;
+				RightRotate(t, x->parent);
+				x = t;
+			}
+		}
+	}
+	x->color = BLACK;
+}
+
+template<class Type>
 void RBTree<Type>::LeftRotate(RBTreeNode<Type> *&t, RBTreeNode<Type> *p)
 {
 	RBTreeNode<Type> *s = p->rightChild;
@@ -292,6 +432,19 @@ void RBTree<Type>::RightRotate(RBTreeNode<Type> *&t, RBTreeNode<Type> *p)
 	p->parent = s;
 }
 
+
+void main()
+{
+	vector<int> iv {10, 7, 8, 15, 5, 6, 11};
+	//vector<int> iv {10, 7, 8};
+	RBTree<int> rb;
+	for(const auto &e : iv)
+		rb.Insert(e);
+
+	rb.Remove(10);
+
+}
+/*
 void main()
 {
 	vector<int> iv {10, 7, 8, 4, 2, 20, 15, 11,12,13};
@@ -311,3 +464,4 @@ void main()
 	cout<<*it;
 	cout<<endl;
 }
+*/
