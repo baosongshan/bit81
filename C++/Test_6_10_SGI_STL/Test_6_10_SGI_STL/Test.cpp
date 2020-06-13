@@ -1,5 +1,25 @@
-#include"stl_alloc.h"
+//#include"stl_alloc.h"
+#include"stl_vector.h"
 
+void main()
+{
+	vector<int> iv;
+}
+
+/*
+void main()
+{
+	int *ptr = (int*)__default_alloc_template<0,0>::allocate(sizeof(int) * 100);
+	int *ptr1 = (int*)__default_alloc_template<0,0>::allocate(sizeof(int));
+	int *ptr2 = (int*)__default_alloc_template<0,0>::allocate(sizeof(int));
+	int *ptr3= (int*)__default_alloc_template<0,0>::allocate(sizeof(int) * 16);
+	//int *ptr4= (int*)__default_alloc_template<0,0>::allocate(sizeof(int) * 8);
+	int *ptr5= (int*)__default_alloc_template<0,0>::allocate(sizeof(int) * 24);
+
+	__default_alloc_template<0,0>::deallocate();
+}
+
+/*
 void OutOfMemory()
 {
 	cout<<"Out Of Memory."<<endl;
