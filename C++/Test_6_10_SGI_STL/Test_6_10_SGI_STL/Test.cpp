@@ -1,9 +1,23 @@
 //#include"stl_alloc.h"
 #include"stl_vector.h"
 
+class Test
+{
+public:
+	Test(int d = 0) : m_data(d)
+	{}
+	Test(const Test &t)
+	{
+		m_data = t.m_data;
+	}
+private:
+	int m_data;
+};
+
 void main()
 {
-	vector<int> iv;
+	//vector<int> iv(10, 2);
+	vector<Test> iv1(5, Test());
 }
 
 /*

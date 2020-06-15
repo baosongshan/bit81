@@ -80,7 +80,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stl_alloc.h" />
+    <ClInclude Include="stl_config.h" />
+    <ClInclude Include="stl_construct.h" />
+    <ClInclude Include="stl_iterator.h" />
+    <ClInclude Include="stl_uninitialized.h" />
     <ClInclude Include="stl_vector.h" />
+    <ClInclude Include="type_traits.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

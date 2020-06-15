@@ -1,8 +1,10 @@
 #pragma once
 
 #include<iostream>
-#include<new>
+//#include<new>
 using namespace std;
+
+#include"stl_config.h"
 
 #define __THROW_BAD_ALLOC throw bad_alloc
 
@@ -239,7 +241,7 @@ char* __default_alloc_template<threads, inst>::chunk_alloc(size_t size, int &nob
 				if(p != 0)
 				{
 					*my_free_list = p->free_list_link;
-					start_free = (char *);
+					start_free = (char *)p;
 					end_free = start_free + i;
 					return chunk_alloc(size, nobjs);
 				}
