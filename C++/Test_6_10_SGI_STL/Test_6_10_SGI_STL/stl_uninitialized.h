@@ -26,7 +26,7 @@ ForwardIterator __Uninitialized_fill_n(ForwardIterator first, Size n, const T &x
 {
 	cout<<"T1 = "<<typeid(T1).name()<<endl;
 	typedef typename __type_traits<T1>::is_POD_type is_POD;
-	return __Uninitialized_fill_n_aux(first, n, x, is_POD());
+	return __Uninitialized_fill_n_aux(first, n, x, is_POD());  //__true_type() or __false_type()
 }
 
 template<class ForwardIterator, class Size, class T>
