@@ -4,6 +4,290 @@
 #include<assert.h>
 using namespace std;
 
+class A
+{
+public:
+	A()
+	{
+		cout<<"A::A()"<<endl;
+		fun();
+	}
+	virtual ~A()
+	{
+		cout<<"A::~A()"<<endl;
+	}
+public:
+	virtual void fun()
+	{
+		cout<<"A::fun()"<<endl;
+	}
+};
+
+class B : public A
+{
+public:
+	B()
+	{
+		cout<<"B::B()"<<endl;
+	}
+	~B()
+	{
+		cout<<"B::~B()"<<endl;
+	}
+public:
+	void fun()
+	{
+		cout<<"B::fun()"<<endl;
+	}
+};
+
+void main()
+{
+	A *pa = new B; //¶¯Ì¬¿ª±Ù
+	delete pa;
+}
+
+/*
+class Base
+{
+public:
+	void fun()
+	{
+		cout<<"Base::fun()"<<endl;
+		cout<<m_b<<endl;
+	}
+	virtual void show()
+	{}
+private:
+	int m_b = 0;
+};
+
+class D : public Base
+{
+public:
+	void fun()
+	{
+		cout<<"D::fun()"<<endl;
+		cout<<m_d<<" : "<<m_x<<" : "<<m_y<<endl;
+	}
+private:
+	int m_d;
+	int m_x;
+	int m_y;
+};
+
+void main()
+{
+	Base *pb = NULL;
+	D d;
+	memset(&d, 0, sizeof(D));
+
+	pb = &d;
+	pb->fun();
+}
+
+/*
+class base
+{
+public:
+	virtual void disp()
+	{
+		cout << "Hello,base" << endl;
+	}
+};
+
+class child1 :public base
+{
+public:
+	void disp()
+	{
+		cout << "hello,child1" << endl;
+	}
+};
+class child2 :public base
+{
+public:
+	void disp()
+	{
+		cout << "hello,child2" << endl;
+	}
+};
+
+void display(base *pb)
+{
+	pb->disp();
+}
+
+int main()
+{
+	base *pBase = NULL, obj_base;
+	obj_base.disp();
+	pBase = &obj_base;
+	pBase->disp();
+
+	child1 *pchild1 = NULL, obj_child1;
+	obj_child1.disp();
+	pchild1 = &obj_child1;
+	pchild1->disp();
+
+	child2 *pchild2 = NULL, obj_child2;
+	obj_child2.disp();
+	pchild2 = &obj_child2;
+	pchild2->disp();
+
+	pBase = &obj_child1;
+	pBase->disp();
+
+	display(&obj_base);
+	display(&obj_child1);
+	display(&obj_child2);
+	return 0;
+}
+
+
+/*
+class A
+{
+	virtual void g()
+	{
+		cout << "A::g" << endl;
+	}
+private:
+	virtual void f()
+	{
+		cout << "A::f" << endl;
+	}
+};
+
+class B : public A
+{
+	void g()
+	{
+		cout << "B::g" << endl;
+	}
+	virtual void h()
+	{
+		cout << "B::h" << endl;
+	}
+};
+
+typedef void(*Fun)(void);
+
+int main(int argc, char* argv[])
+{
+	B b;
+	Fun pFun;
+	for (int i = 0; i < 3; i++)
+	{
+		pFun = (Fun)*((int*)* (int*)(&b) + i);
+		pFun();
+	}
+	return 0;
+}
+
+
+/*
+class  CBase
+{
+public:
+	virtual void act1()   
+	{
+		cout << "CBase::act1()! ";  
+		act2();
+	}
+	void act2()       
+	{
+		cout << "CBase::act2()! ";  
+		act3(); 
+	}
+	virtual void act3()
+	{ 
+		cout << "CBase::act3()! ";  
+		act4(); 
+	}
+	virtual void act4() 
+	{
+		cout << "CBase::act4()! "; 
+		act5(); 
+	}
+	void act5()    
+	{
+		cout << "CBase::act5()! "; 
+	}
+};
+
+class  CDerive : public  CBase
+{
+public:
+	void act3()   
+	{
+		cout << "CDerive::act3()! ";      
+		act4();
+	}
+	void act4()
+	{ 
+		cout << "CDerive::act4()! ";   
+		act5();
+	}
+	void act5() 
+	{
+		cout << "CDerive::act5()! ";
+	}
+};
+
+void  main(void)
+{
+	CBase *pObj1 = new CBase;
+	pObj1->act1();
+	pObj1->act5();
+	cout << endl;
+
+	CBase *pObj2 = new CDerive;
+	pObj2->act1();
+	pObj2->act5();
+
+	delete pObj1;
+	delete pObj2;
+}
+
+
+/*
+class A
+{
+public:
+	void sayhello()
+	{
+		cout << "hello A" << endl;
+	}
+private:
+};
+
+class B
+{
+public:
+	virtual void sayhello()
+	{
+		cout << "hello B" << endl;
+	}
+private:
+};
+
+int main()
+{
+	A *pa = NULL;
+	//A *pa = new A;
+	pa->sayhello();
+
+	B *pb = NULL;
+	//B *pb = new B;
+	pb->sayhello();
+	
+	system("pause");
+	return 0;
+}
+
+
+/*
 class Base
 {
 public:
